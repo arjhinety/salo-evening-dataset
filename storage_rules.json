@@ -1,0 +1,62 @@
+[
+ {
+  "category": "cooked_dish",
+  "examples": "adobo, menudo, giniling, fried chicken, lumpia",
+  "max_hours_unrefrigerated": 2,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "cooked_noodles",
+  "examples": "pancit canton, pancit bihon",
+  "max_hours_unrefrigerated": 2,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "cooked_vegetables",
+  "examples": "chop suey, ginisang monggo",
+  "max_hours_unrefrigerated": 2,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "cooked_soup",
+  "examples": "tinola, sinigang",
+  "max_hours_unrefrigerated": 2,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "cooked_rice",
+  "examples": "steamed rice",
+  "max_hours_unrefrigerated": 2,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "bread",
+  "examples": "pandesal, ensaymada, monay, sliced bread",
+  "max_hours_unrefrigerated": 72,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "fresh_vegetables",
+  "examples": "talong, kamatis",
+  "max_hours_unrefrigerated": 72,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "leafy_greens",
+  "examples": "pechay",
+  "max_hours_unrefrigerated": 24,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "fruit",
+  "examples": "saging",
+  "max_hours_unrefrigerated": 72,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ },
+ {
+  "category": "packaged_shelf_stable",
+  "examples": "canned sardines, instant noodles",
+  "max_hours_unrefrigerated": 8760,
+  "source": "ASSUMPTION: same-evening spoilage limit chosen by the proponent; NOT FoodKeeper data"
+ }
+]

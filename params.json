@@ -1,0 +1,13 @@
+{
+  "food_insecure_share_qc": {"value": 0.30, "unit": "share of households", "status": "PLACEHOLDER until sources/fnri_food_security.csv is present; then the weighted Quezon City value from the DOST-FNRI ENNS Food Security PUF", "source": "DOST-FNRI ENNS Food Security Survey public use file. Used ONLY to set households_served = catchment_households x share. Changed 2026-10-12: no longer multiplied into need, because pantry clients are already food-insecure households (multiplying again double-counted the share)."},
+  "catchment_households_min": {"value": 100, "unit": "households near a pantry", "status": "assumption", "source": "Assumed number of households within walking distance that a small pantry could register"},
+  "catchment_households_max": {"value": 400, "unit": "households near a pantry", "status": "assumption", "source": "Assumed number of households within walking distance that a small pantry could register"},
+  "turnout_min": {"value": 0.3, "unit": "share of served households expecting food on a given evening", "status": "assumption", "source": "Assumed; not every registered household comes every evening"},
+  "turnout_max": {"value": 0.6, "unit": "share of served households expecting food on a given evening", "status": "assumption", "source": "Assumed; not every registered household comes every evening"},
+  "kg_per_household_evening": {"value": 0.25, "unit": "kg per household that turns up", "status": "assumption", "source": "Assumed supplementary portion (about one ulam serving per household); rescued food tops up, it does not replace, a household's meals"},
+  "share_pantries_with_fridge": {"value": 0.5, "unit": "share of pantries", "status": "assumption", "source": "Assumed; small community pantries often lack refrigeration"},
+  "supply_ratio_min": {"value": 0.6, "unit": "posted kg / total need kg", "status": "design rule", "source": "Salo study guide, page 13 (food supply fixed before tuning)"},
+  "supply_ratio_max": {"value": 0.9, "unit": "posted kg / total need kg", "status": "design rule", "source": "Salo study guide, page 13 (food supply fixed before tuning)"},
+  "speed_kmh_motorcycle": {"value": 18, "unit": "km/h", "status": "assumption", "source": "Assumed evening traffic speed in Cubao (plus 3 min handling)"},
+  "speed_kmh_car": {"value": 14, "unit": "km/h", "status": "assumption", "source": "Assumed evening traffic speed in Cubao (plus 5 min parking/handling)"}
+}

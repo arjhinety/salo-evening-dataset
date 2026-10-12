@@ -1,0 +1,3 @@
+# keep the pinned source files byte-for-byte (no line-ending conversion)
+sources/** -text
+*.csv -text
