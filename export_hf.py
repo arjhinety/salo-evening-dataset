@@ -162,13 +162,13 @@ configs:
 
 # Salo Evening Dataset
 
-A dataset for **Salo**, a proposed multi-agent food rescue system that matches surplus food from small food businesses (karinderyas, panaderias, stalls) to community pantries in the **Cubao–Project 4 area of Quezon City, Philippines**. Made for CS 403 (Intelligent Agents), Technological Institute of the Philippines – Quezon City, 1st Semester S.Y. 2026–2027.
+I built this dataset for **Salo**, the multi-agent food rescue system I proposed for my CS 403 (Intelligent Agents) project at the Technological Institute of the Philippines – Quezon City, 1st Semester S.Y. 2026–2027. Salo matches surplus food from small food businesses (karinderyas, panaderias, stalls) to community pantries in the **Cubao–Project 4 area of Quezon City, Philippines**.
 
-**Compiled by Arjhine A. Ty** (solo project). The dataset combines three public sources (OpenStreetMap, the FoodGo Test Dataset and USDA FoodKeeper) with **simulated data** from a seeded script.
-- **All business, pantry and volunteer names are fictional, and no real person's private information is included.**
-- The roads and street names are real; the places put on them are not.
+I combined three public sources (OpenStreetMap, the FoodGo Test Dataset and USDA FoodKeeper) with **simulated data** from a seeded script.
+- **All business, pantry and volunteer names are fictional, and I included no real person's private information.**
+- The roads and street names are real; the places I put on them are not.
 
-**Build code, pinned sources and the full regeneration guide:** {GH_REPO}. {commit_line}
+**My build code, pinned sources and full regeneration guide:** {GH_REPO}. {commit_line}
 
 ```python
 from datasets import load_dataset
@@ -194,7 +194,7 @@ There are {total:,} rows across 10 tables, and each table is its own subset. `ha
 
 FoodKeeper is credited **only** for the `storage_rules` storage-time fields and the `needs_fridge_if_kept` rule derived from them. **`max_hours_unrefrigerated` (the same-evening spoilage limit) is an assumption, not FoodKeeper data.** The one exception is eggplant, whose limit is capped at 24 h because FoodKeeper lists 1 day at room temperature.
 
-The DOST-FNRI ENNS food-security survey was planned as a source but was **not obtained**. The food-insecure share (0.30) is an assumption.
+I planned to use the DOST-FNRI ENNS food-security survey but **didn't obtain it**, so the food-insecure share (0.30) is my assumption.
 
 ### Source of every field
 
@@ -215,7 +215,7 @@ The DOST-FNRI ENNS food-security survey was planned as a source but was **not ob
   - Language mix: {lang.get('taglish', 0)}% Taglish, {lang.get('en', 0)}% English and {lang.get('fil', 0)}% Filipino.
   - Difficulty mix: explicit, implicit, incomplete and contradictory.
 - **Splits:** `evenings.split` and `donor_messages.split` are `tuning` (E01–E10), `pilot` (E11–E20) or `main_sample` (E21–E30).
-- **Anchor rows:** some rows are **hand-set** to reproduce the project's worked examples, and are marked `anchor = True`:
+- **Anchor rows:** I hand-set some rows to reproduce my project's worked examples, and marked them `anchor = True`:
   - Bukal (has a fridge, 15th Avenue) and Socorro (no fridge, Columbia Street). By road from Karinderya ni Aling Oning (Aurora Boulevard), Bukal is 1.10 km and Socorro 0.60 km.
   - Anonas (closes at 19:00).
   - R. Dizon: 10 shows in 11 runs, giving 0.85.
@@ -230,7 +230,7 @@ The DOST-FNRI ENNS food-security survey was planned as a source but was **not ob
   - **Any parsing accuracy measured on them is an optimistic upper bound, not real-world accuracy.**
   - Tune a parser prompt only on `tuning` messages and report accuracy only on `pilot` / `main_sample`.
   - Even then, {reuse} of the {len(test)} pilot/main messages use only phrasings that also appear in tuning messages (see `template_id`). So pilot/main accuracy does **not** measure how a parser handles new phrasings.
-- **Fictional pantries.** The project proposal planned a real list of pantries gathered by the proponent. That list would need the organisers' permission, so fictional pantries are used for now.
+- **Fictional pantries.** My project proposal planned a real list of pantries that I would gather myself. That list needs the organisers' permission, so I used fictional pantries for now.
 - **Simplified map.** Roads are treated as two-way, and only Cubao–Project 4 is covered. Rain is recorded per evening but does not yet affect anything.
 
 ## Citation and attribution

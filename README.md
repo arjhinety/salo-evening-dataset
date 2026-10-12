@@ -1,16 +1,16 @@
 # Salo Evening Dataset: build code
 
-This repository builds the **Salo Evening Dataset**, published at
+This repository builds my **Salo Evening Dataset**, published at
 **https://huggingface.co/datasets/arjhinety/salo-evening-dataset**.
 
-Salo is a proposed multi-agent food rescue system. It matches surplus food from small food businesses (karinderyas, panaderias, stalls) to community pantries in the Cubao–Project 4 area of Quezon City, Philippines. It was made for CS 403 (Intelligent Agents), Technological Institute of the Philippines – Quezon City, 1st Semester S.Y. 2026–2027. **Compiled by Arjhine A. Ty** (solo project).
+I built this dataset for **Salo**, the multi-agent food rescue system I proposed for my CS 403 (Intelligent Agents) project at the Technological Institute of the Philippines – Quezon City, 1st Semester S.Y. 2026–2027. Salo matches surplus food from small food businesses (karinderyas, panaderias, stalls) to community pantries in the Cubao–Project 4 area of Quezon City, Philippines.
 
-The dataset combines three public sources, pinned in [`sources/`](sources/), with simulated data from a seeded script:
+I combined three public sources, pinned in [`sources/`](sources/), with simulated data from a seeded script:
 - OpenStreetMap roads;
 - FoodGo delivery patterns;
 - USDA FoodKeeper storage times.
 
-All business, pantry and volunteer names are fictional, and no real person's private information is included.
+All business, pantry and volunteer names are fictional, and I included no real person's private information.
 
 ## Regenerate the dataset
 
@@ -57,7 +57,7 @@ The dataset card records the exact commit of this repository that built the publ
 | 8. Messages | `messages.py` | Writes 500 donor messages **from** each lot's fields, so the gold labels are correct by construction. Records `split` and `template_id`. |
 | 9. Provenance | `build_dataset.py` | Writes `sources.csv` (source and status of every field) and `parameters.csv` (every assumed number). |
 
-All assumed numbers live in `params.json`, so they can be changed in one place. Changing any of them changes the data, so run `python verify.py --update` to record new checksums.
+I keep every assumed number in `params.json`, so they can be changed in one place. Changing any of them changes the data, so run `python verify.py --update` to record new checksums.
 
 ## Important caveats
 
@@ -65,8 +65,8 @@ All assumed numbers live in `params.json`, so they can be changed in one place. 
 - **The messages are template-based.** Any parsing accuracy measured on them is an optimistic upper bound.
   - Tune only on `tuning` messages, and report only on `pilot` / `main_sample`.
   - Even pilot/main messages reuse tuning phrasings, so their accuracy does not measure how a parser handles new phrasings.
-- **FNRI was not used.** The food-insecure share (0.30) is an assumption, and the DOST-FNRI survey was not obtained.
-- **The pantries are fictional.** The project proposal planned a real list. That list would need the organisers' permission.
+- **FNRI was not used.** I planned to use the DOST-FNRI survey but didn't obtain it, so the food-insecure share (0.30) is my assumption.
+- **The pantries are fictional.** My project proposal planned a real list that I would gather myself. That list needs the organisers' permission, so I used fictional pantries for now.
 
 Full details are in the [dataset card](https://huggingface.co/datasets/arjhinety/salo-evening-dataset).
 

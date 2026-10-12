@@ -1,6 +1,6 @@
 # Pinned source files
 
-These are the exact input files the build reads. They are kept **unchanged** here, so that anyone can rebuild the same dataset. `verify.py` checks their SHA-256 against `../SHA256SUMS`.
+These are the exact input files my build reads. I keep them **unchanged** here, so that anyone can rebuild the same dataset. `verify.py` checks their SHA-256 against `../SHA256SUMS`.
 
 | File | Source | License | SHA-256 |
 |---|---|---|---|
@@ -24,10 +24,10 @@ out body;
 curl -G --data-urlencode "data=<query above>" https://overpass-api.de/api/interpreter -o osm_roads_cubao_project4.json
 ```
 
-OpenStreetMap is edited constantly. Downloading again **will give different data**, so node IDs, distances and the anchor placement would change. Use the pinned file to reproduce the published dataset.
+OpenStreetMap is edited constantly. Downloading again **will give different data**, so node IDs, distances and the anchor placement would change. Use the pinned file to reproduce my published dataset.
 
 **FoodGo.** Download `foodgo-test-data.zip` from https://zenodo.org/records/3801643 and unzip it. It contains `foodgo-orders.csv` and `foodgo-volunteers.csv`. Only the distributions are used: lot sizes, vehicle capacities and availability-window lengths. The coordinates are in Pittsburgh, USA, and are not used.
 
 **FoodKeeper.** Download the English JSON ("FoodKeeper Data - English") from https://catalog.data.gov/dataset/fsis-foodkeeper-data. FSIS blocks scripted downloads, so use a browser. The pinned copy is data version 128.
 
-**DOST-FNRI ENNS Food Security public use file.** This was planned but **not obtained**. The download form needs the requester's details. `build_dataset.py` stops if `sources/fnri_food_security.csv` appears, so its loader can be written before it is used.
+**DOST-FNRI ENNS Food Security public use file.** I planned to use it but **didn't obtain it**; the download form needs the requester's details. `build_dataset.py` stops if `sources/fnri_food_security.csv` appears, so its loader can be written before it is used.
