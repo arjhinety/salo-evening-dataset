@@ -330,6 +330,7 @@ SURN = ["Dizon", "Ramos", "Santos", "Reyes", "Cruz", "Bautista", "Garcia", "Mend
 VEH = [("motorcycle", 0.55), ("car", 0.2), ("tricycle", 0.15), ("bicycle", 0.10)]
 drivers, planned_outcomes = [], {}
 dr_nodes = pick_nodes(res_cand, 40, 0.1)
+driver_node = {f"V{i:02d}": n for i, n in enumerate(dr_nodes, 1)}  # home road node (v1.2: driver_distances)
 for i, (sn, n) in enumerate(zip(SURN, dr_nodes), 1):
     initial = chr(ord("A") + rng.randrange(26))
     if sn == "Dizon":
@@ -512,15 +513,34 @@ for (kind, nm), n in ANCHOR_NODES.items():
     rows[ix].update({"street": node_street[n][0], "lat": round(nodes[n][0], 6), "lon": round(nodes[n][1], 6),
                      "osm_node_id": n})
 # recompute road distances with the final positions (deterministic shortest paths)
+# minutes = road km / assumed speed + handling time; bicycle and tricycle added in v1.2 (no random draws)
+HANDLING_MIN = {"motorcycle": 3, "car": 5, "bicycle": 2, "tricycle": 4}
+
+
+def leg_min(km, veh):
+    return round(km / P[f"speed_kmh_{veh}"] * 60 + HANDLING_MIN[veh], 1)
+
+
 dist_rows = []
 for d in donors:
     dd = dijkstra(d["osm_node_id"])
     for p in pantries:
         km = dd[p["osm_node_id"]]
         dist_rows.append({"donor_id": d["donor_id"], "pantry_id": p["pantry_id"], "road_km": round(km, 2),
-                          "est_min_motorcycle": round(km / P["speed_kmh_motorcycle"] * 60 + 3, 1),
-                          "est_min_car": round(km / P["speed_kmh_car"] * 60 + 5, 1)})
+                          "est_min_motorcycle": leg_min(km, "motorcycle"), "est_min_car": leg_min(km, "car"),
+                          "est_min_bicycle": leg_min(km, "bicycle"), "est_min_tricycle": leg_min(km, "tricycle")})
 dist_df = pd.DataFrame(dist_rows)
+
+# v1.2: each driver's home to each donor, by road, in the driver's own vehicle (first leg of a run's ETA)
+veh_of = {r["driver_id"]: r["vehicle"] for r in drivers}
+drv_rows = []
+for did, n in driver_node.items():
+    dd = dijkstra(n)
+    for d in donors:
+        km = dd[d["osm_node_id"]]
+        drv_rows.append({"driver_id": did, "donor_id": d["donor_id"], "vehicle": veh_of[did],
+                         "road_km": round(km, 2), "est_min": leg_min(km, veh_of[did])})
+drvdist_df = pd.DataFrame(drv_rows)
 
 # ---------------------------------------------------------------- donor messages
 import messages  # local module
@@ -541,7 +561,9 @@ SOURCES = [
     ("pantry_needs", "need_kg", "households_served x assumed turnout x assumed kg per household", "ASSUMPTION"),
     ("donors", "lat, lon, street, osm_node_id", "OpenStreetMap", "REAL (fictional donor placed on a real road node)"),
     ("road_distances", "road_km", "OpenStreetMap road network, shortest path", "REAL (computed)"),
-    ("road_distances", "est_min_motorcycle, est_min_car", "road_km / assumed speeds", "ASSUMPTION"),
+    ("road_distances", "est_min_motorcycle, est_min_car, est_min_bicycle, est_min_tricycle", "road_km / assumed speeds + handling minutes", "ASSUMPTION"),
+    ("driver_distances", "road_km", "OpenStreetMap shortest path from the driver's home road node to the donor's (roads treated as two-way)", "REAL (computed on OSM roads)"),
+    ("driver_distances", "est_min", "road_km / assumed speed of the driver's own vehicle + handling minutes", "ASSUMPTION"),
     ("drivers", "capacity_load_units", "FoodGo volunteer capacities (3-5 units), +1 car, -1 bicycle", "FOODGO-DERIVED"),
     ("drivers", "available_from, available_to", "FoodGo 4-hour availability windows, shifted to evenings", "FOODGO-DERIVED"),
     ("drivers", "reliability_estimate_frozen", "frozen after tuning: (shows + 1) / (runs + 2) over E01-E10 runs", "DERIVED"),
@@ -574,7 +596,7 @@ print(ev_df[["evening_id", "split", "pantries_open", "total_need_kg", "total_pos
 tables = {
     "pantries": pantries_df, "donors": donors_df, "drivers": drivers_df, "driver_runs": runs_df,
     "evenings": ev_df, "pantry_needs": need_df, "food_offers": off_df, "donor_messages": msg_df,
-    "road_distances": dist_df, "storage_rules": STORAGE,
+    "road_distances": dist_df, "driver_distances": drvdist_df, "storage_rules": STORAGE,
 }
 for k, df in tables.items():
     df.to_csv(os.path.join(OUT, f"{k}.csv"), index=False, encoding="utf-8", lineterminator="\n")

@@ -15,13 +15,14 @@ OUT = os.path.join(HERE, "hf")
 HF_REPO = "arjhinety/salo-evening-dataset"
 GH_REPO = "https://github.com/arjhinety/salo-evening-dataset"
 
-ODBL = ["pantries", "donors", "drivers", "road_distances", "donor_messages"]
+ODBL = ["pantries", "donors", "drivers", "road_distances", "driver_distances", "donor_messages"]
 CCBY = ["food_offers", "evenings", "pantry_needs", "driver_runs", "storage_rules"]
 DESC = {
     "pantries": "fictional pantries placed on real OSM road nodes in Cubao–Project 4",
     "donors": "fictional karinderyas, panaderias, stalls and canteens",
     "drivers": "fictional volunteer drivers; reliability learned on tuning evenings, then frozen",
     "road_distances": "road km and travel time from every donor to every pantry (OSM shortest paths)",
+    "driver_distances": "road km and travel time from every driver's home to every donor, in the driver's own vehicle",
     "donor_messages": "English / Filipino / Taglish donor messages with gold structured fields",
     "food_offers": "lots of surplus food posted on each evening",
     "evenings": "30 seeded evenings (10 tuning, 10 pilot, 10 main_sample)",
@@ -31,7 +32,8 @@ DESC = {
 }
 FLOAT_COLS = {"est_kg", "gold_est_kg", "need_kg", "road_km", "lat", "lon", "home_lat", "home_lon", "room_temp_min",
               "room_temp_max", "fridge_min", "fridge_max", "total_need_kg", "total_posted_kg", "supply_ratio",
-              "est_min_motorcycle", "est_min_car", "reliability_estimate_frozen"}
+              "est_min_motorcycle", "est_min_car", "est_min_bicycle", "est_min_tricycle", "est_min",
+              "reliability_estimate_frozen"}
 sha = lambda f: hashlib.sha256(open(f, "rb").read()).hexdigest()
 
 
@@ -177,7 +179,7 @@ offers = load_dataset("{HF_REPO}", "food_offers", split="train")
 
 ## Tables
 
-There are {total:,} rows across 10 tables, and each table is its own subset. `hash.txt` gives the SHA-256 of every file.
+There are {total:,} rows across {len(ODBL) + len(CCBY)} tables, and each table is its own subset. `hash.txt` gives the SHA-256 of every file.
 
 | Table | Rows | What one row is | License |
 |---|---|---|---|
@@ -223,6 +225,7 @@ I planned to use the DOST-FNRI ENNS food-security survey but **didn't obtain it*
 
 ## Changelog
 
+- **v1.2 (2026-10-13):** bicycle and tricycle travel times (`road_distances.est_min_bicycle`, `est_min_tricycle`; assumed 12 and 15 km/h), and the new `driver_distances` table: each driver's home to each donor by road, in the driver's own vehicle. Append-only: every other table is byte-identical to v1.1. Hub tag: `v1.2`.
 - **v1.1 (2026-10-13):** donor messages are now sampled per evening, 17 lots per evening, each evening with its own seed. That gives 510 messages (170 tuning, 170 pilot, 170 main_sample), replacing v1.0's 500. Adding more main evenings now only appends messages and never changes earlier ones. Every other table is byte-identical to v1.0. Details are in the [GitHub changelog](https://github.com/arjhinety/salo-evening-dataset#changelog). Hub tag: `v1.1`.
 - **v1.0 (2026-10-12):** first release, 500 donor messages sampled from all evenings at once. My CS 403 Dataset report (PDF) describes this version. Hub tag: `v1.0`.
 

@@ -23,13 +23,13 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate    macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
 
-python build_dataset.py      # writes salo-evening-dataset/ (10 tables + sources.csv + parameters.csv)
+python build_dataset.py      # writes salo-evening-dataset/ (11 tables + sources.csv + parameters.csv)
 python verify.py             # rebuilds and checks every file against SHA256SUMS
 ```
 
-`verify.py` should print **`16 of 16 files match SHA256SUMS`**:
+`verify.py` should print **`17 of 17 files match SHA256SUMS`**:
 - 4 pinned source files;
-- 10 tables;
+- 11 tables;
 - `sources.csv` and `parameters.csv`.
 
 The build is seeded (`SEED = 20260927`), so it gives the same files every time.
@@ -72,6 +72,12 @@ Full details are in the [dataset card](https://huggingface.co/datasets/arjhinety
 
 ## Changelog
 
+### v1.2 (2026-10-13)
+
+- **Travel times for every vehicle.** In `road_distances`, the new columns `est_min_bicycle` and `est_min_tricycle` add assumed speeds for bicycles (12 km/h + 2 min handling) and tricycles (15 km/h + 4 min). The 7 bicycle and tricycle drivers had no travel time before.
+- **New table `driver_distances`** (2,000 rows): road km from each driver's home road node to each donor (OpenStreetMap shortest paths), and the minutes in the driver's own vehicle. It is the first leg of a run's arrival time. The second leg, donor to pantry, is in `road_distances`.
+- **Append-only:** no new random draws. The other 9 data tables are byte-identical to v1.1. The original `road_distances` columns are unchanged, and `parameters.csv` and `sources.csv` gain rows for the new fields. `verify.py` checks 17 files.
+
 ### v1.1 (2026-10-13)
 
 - **Donor messages are now sampled per evening.** In v1.0, `messages.py` drew 500 lots from all 30 evenings at once and wrote them from a single random stream. Adding evenings would therefore have changed every earlier evening's messages. I checked this: in a 40-evening test build, only 1 of 164 shared E01–E20 lots kept the same message. Now each evening samples 17 of its own lots and writes their messages with its own generator, seeded from that evening's seed. Message IDs run in evening order. So adding main evenings, if the pilot asks for more, only appends messages at the end.
@@ -92,7 +98,7 @@ Full details are in the [dataset card](https://huggingface.co/datasets/arjhinety
 - **Code** (`*.py`, `*.json` configuration): MIT, see [`LICENSE`](LICENSE).
 - **Pinned sources:** each keeps its own license (ODbL 1.0, CC BY 4.0, CC0 1.0). See [`sources/README.md`](sources/README.md).
 - **Generated tables** (on Hugging Face):
-  - ODbL 1.0 for the tables containing OpenStreetMap-derived data: pantries, donors, drivers, road_distances, donor_messages;
+  - ODbL 1.0 for the tables containing OpenStreetMap-derived data: pantries, donors, drivers, road_distances, driver_distances, donor_messages;
   - CC BY 4.0 for the others.
 
 Attribution: © OpenStreetMap contributors; Rubinstein, Z. B. (2020), *FoodGo Test Dataset*, Zenodo, doi:10.5281/zenodo.3801643; USDA FSIS FoodKeeper Data.

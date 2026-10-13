@@ -9,5 +9,7 @@
   "supply_ratio_min": {"value": 0.6, "unit": "posted kg / total need kg", "status": "design rule", "source": "Salo study guide, page 13 (food supply fixed before tuning)"},
   "supply_ratio_max": {"value": 0.9, "unit": "posted kg / total need kg", "status": "design rule", "source": "Salo study guide, page 13 (food supply fixed before tuning)"},
   "speed_kmh_motorcycle": {"value": 18, "unit": "km/h", "status": "assumption", "source": "Assumed evening traffic speed in Cubao (plus 3 min handling)"},
-  "speed_kmh_car": {"value": 14, "unit": "km/h", "status": "assumption", "source": "Assumed evening traffic speed in Cubao (plus 5 min parking/handling)"}
+  "speed_kmh_car": {"value": 14, "unit": "km/h", "status": "assumption", "source": "Assumed evening traffic speed in Cubao (plus 5 min parking/handling)"},
+  "speed_kmh_bicycle": {"value": 12, "unit": "km/h", "status": "assumption", "source": "Assumed evening cycling speed in Cubao traffic (plus 2 min handling). Added in dataset v1.2"},
+  "speed_kmh_tricycle": {"value": 15, "unit": "km/h", "status": "assumption", "source": "Assumed evening tricycle speed in Cubao traffic (plus 4 min handling). Added in dataset v1.2"}
 }
