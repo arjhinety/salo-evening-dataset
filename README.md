@@ -54,7 +54,7 @@ The dataset card records the exact commit of this repository that built the publ
 | 5. Evenings | `build_dataset.py` | Creates 30 seeded evenings (10 tuning, 10 pilot, 10 main_sample). Need is fixed at 16:00, and posted food is 0.6–0.9× total need. |
 | 6. Driver runs | `build_dataset.py` | Creates runs **only** on tuning evenings E01–E10, each a real lot with no overlapping windows. Reliability = (shows + 1) ÷ (runs + 2), then frozen. |
 | 7. Anchors | `build_dataset.py`, `find_anchor_nodes.py` | Hand-placed rows reproduce the project's worked examples, after every random draw (`anchor = True`). |
-| 8. Messages | `messages.py` | Writes 500 donor messages **from** each lot's fields, so the gold labels are correct by construction. Records `split` and `template_id`. |
+| 8. Messages | `messages.py` | Samples 17 lots per evening, each evening with its own seed, and writes one donor message **from** each lot's fields, so the gold labels are correct by construction (510 messages). Records `split` and `template_id`. |
 | 9. Provenance | `build_dataset.py` | Writes `sources.csv` (source and status of every field) and `parameters.csv` (every assumed number). |
 
 I keep every assumed number in `params.json`, so they can be changed in one place. Changing any of them changes the data, so run `python verify.py --update` to record new checksums.
@@ -69,6 +69,23 @@ I keep every assumed number in `params.json`, so they can be changed in one plac
 - **The pantries are fictional.** My project proposal planned a real list that I would gather myself. That list needs the organisers' permission, so I used fictional pantries for now.
 
 Full details are in the [dataset card](https://huggingface.co/datasets/arjhinety/salo-evening-dataset).
+
+## Changelog
+
+### v1.1 (2026-10-13)
+
+- **Donor messages are now sampled per evening.** In v1.0, `messages.py` drew 500 lots from all 30 evenings at once and wrote them from a single random stream. Adding evenings would therefore have changed every earlier evening's messages. I checked this: in a 40-evening test build, only 1 of 164 shared E01–E20 lots kept the same message. Now each evening samples 17 of its own lots and writes their messages with its own generator, seeded from that evening's seed. Message IDs run in evening order. So adding main evenings, if the pilot asks for more, only appends messages at the end.
+- **Verified append-only.** A 40-evening test build (20 main evenings) reproduces all 510 v1.1 messages for E01–E30 exactly, in every column including `message_id`. The new evenings' messages start at M0511.
+- **What changed in the data** (10 tables, 4,925 rows):
+  - `donor_messages` now has 510 rows (170 tuning, 170 pilot, 170 main_sample; v1.0 had 500: 163 / 166 / 171), and every message is new.
+  - All other tables are byte-identical to v1.0, and `SHA256SUMS` was updated for `donor_messages.csv` only.
+  - 330 of the 340 pilot/main messages use only phrasings that also appear in tuning messages (v1.0: 96%).
+- **Code:** `build_dataset.py` sets the number of evenings per split in one place (`N_EVENINGS`).
+- **Not affected:** no parser prompt or rule had been tuned on the v1.0 messages. My submitted dataset report (PDF) describes v1.0.
+
+### v1.0 (2026-10-12)
+
+- First release: 10 tables, 4,915 rows, built from commit e6e27a2.
 
 ## Licenses
 

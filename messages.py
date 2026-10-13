@@ -187,18 +187,28 @@ def make(row, street, lang, diff, r):
     return text, gold, "|".join(parts)
 
 
-def build(offers, donors, rng_seed, n=500):
-    r = random.Random(rng_seed + 7)
+def build(offers, donors, evenings, per_evening=17):
+    """Samples per_evening lots from each evening and writes one message per sampled lot.
+
+    Each evening uses its own generator, seeded from that evening's seed, for both the lot sample and
+    every phrasing draw. Message IDs run in evening order. So appending evenings (e.g. more main_sample
+    evenings) only adds messages at the end and never changes an earlier evening's messages (v1.1).
+    """
     street = donors.set_index("donor_id")["street"].to_dict()
-    picks = offers.sample(n=min(n, len(offers)), random_state=rng_seed).sort_values("lot_id")
     langs = ["en"] * 30 + ["fil"] * 25 + ["taglish"] * 45
     diffs = ["explicit"] * 50 + ["implicit"] * 30 + ["incomplete"] * 15 + ["contradictory"] * 5
     rows = []
-    for i, row in enumerate(picks.itertuples(), 1):
-        lang, diff = r.choice(langs), r.choice(diffs)
-        text, gold, tid = make(row, street[row.donor_id], lang, diff, r)
-        rows.append({"message_id": f"M{i:04d}", "lot_id": row.lot_id, "donor_id": row.donor_id, "language": lang,
-                     "difficulty": diff, "generation": "template", "template_id": tid, "message_text": text, **gold})
+    for ev in evenings.sort_values("evening_id").itertuples():
+        # string seed: deterministic in Python 3 and never equal to another evening's integer seed
+        r = random.Random(f"salo-messages/{ev.evening_id}/{ev.seed}")
+        lots = offers[offers["evening_id"] == ev.evening_id].sort_values("lot_id").reset_index(drop=True)
+        picks = sorted(r.sample(range(len(lots)), min(per_evening, len(lots))))
+        for row in lots.iloc[picks].itertuples():
+            lang, diff = r.choice(langs), r.choice(diffs)
+            text, gold, tid = make(row, street[row.donor_id], lang, diff, r)
+            rows.append({"message_id": f"M{len(rows) + 1:04d}", "lot_id": row.lot_id, "donor_id": row.donor_id,
+                         "language": lang, "difficulty": diff, "generation": "template", "template_id": tid,
+                         "message_text": text, **gold})
     df = pd.DataFrame(rows)
     df["gold_quantity"] = df["gold_quantity"].astype("Int64")
     return df

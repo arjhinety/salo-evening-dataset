@@ -372,7 +372,10 @@ drivers_df = pd.DataFrame(drivers)
 # ---------------------------------------------------------------- evenings, needs, offers
 evenings, needs, offers = [], [], []
 lot = 1
-split = ["tuning"] * 10 + ["pilot"] * 10 + ["main_sample"] * 10
+# Evenings per split. Main evenings can be appended (the pilot sets their count, study guide p.19):
+# every evening draws from its own seed, so adding evenings never changes an earlier evening's rows.
+N_EVENINGS = {"tuning": 10, "pilot": 10, "main_sample": 10}
+split = [s for s, k in N_EVENINGS.items() for _ in range(k)]
 dow_factor = {0: 1.0, 1: 1.0, 2: 1.05, 3: 1.05, 4: 1.15, 5: 1.25, 6: 0.85}
 
 
@@ -385,7 +388,7 @@ def tstr(m):
     return f"{m // 60:02d}:{m % 60:02d}"
 
 
-for e in range(1, 31):
+for e in range(1, len(split) + 1):
     eseed = SEED * 100 + e
     er = random.Random(eseed)
     date = pd.Timestamp("2026-10-01") + pd.Timedelta(days=e - 1)
@@ -521,7 +524,9 @@ dist_df = pd.DataFrame(dist_rows)
 
 # ---------------------------------------------------------------- donor messages
 import messages  # local module
-msg_df = messages.build(off_df, donors_df, rng_seed=SEED, n=500)
+# MESSAGES_PER_EVENING messages per evening, each evening sampled with its own seed (dataset v1.1)
+MESSAGES_PER_EVENING = 17
+msg_df = messages.build(off_df, donors_df, ev_df, per_evening=MESSAGES_PER_EVENING)
 # split comes from the lot's evening (no randomness): tuning / pilot / main_sample
 _lot_ev = off_df.set_index("lot_id")["evening_id"]
 _ev_split = ev_df.set_index("evening_id")["split"]
