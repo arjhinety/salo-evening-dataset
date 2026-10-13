@@ -221,6 +221,11 @@ I planned to use the DOST-FNRI ENNS food-security survey but **didn't obtain it*
   - R. Dizon: 10 shows in 11 runs, giving 0.85.
   - J. Ramos: no runs, giving 0.50.
 
+## Changelog
+
+- **v1.1 (2026-10-13):** donor messages are now sampled per evening, 17 lots per evening, each evening with its own seed. That gives 510 messages (170 tuning, 170 pilot, 170 main_sample), replacing v1.0's 500. Adding more main evenings now only appends messages and never changes earlier ones. Every other table is byte-identical to v1.0. Details are in the [GitHub changelog](https://github.com/arjhinety/salo-evening-dataset#changelog). Hub tag: `v1.1`.
+- **v1.0 (2026-10-12):** first release, 500 donor messages sampled from all evenings at once. My CS 403 Dataset report (PDF) describes this version. Hub tag: `v1.0`.
+
 ## Limitations
 
 - **Simulated.** The data shows how agents behave on plausible inputs. It is not evidence of real-world performance.
